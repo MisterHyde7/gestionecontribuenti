@@ -60,7 +60,8 @@
 				                </thead>
 				                <tbody>
 				                	<c:forEach items="${contribuente_list_attribute }" var="contribuenteItem">
-										<tr class=${contribuenteItem.nome==IN_CONTENZIOSO?'bg-warning':''}>
+				                	  <c:forEach items="${contribuenteItem.cartelle }" var="cartellaItem">
+										<tr class=${cartellaItem.stato==Stato.IN_CONTENZIOSO?'bg-warning':''}>
 											<td>${contribuenteItem.nome }</td>
 											<td>${contribuenteItem.cognome }</td>
 											<td>${contribuenteItem.codiceFiscale }</td>
@@ -72,6 +73,7 @@
 												<a class="btn btn-outline-danger btn-sm" href="${pageContext.request.contextPath}/contribuente/delete/${contribuenteItem.id }">Delete</a>
 											</td>
 										</tr>
+									  </c:forEach>
 									</c:forEach>
 				                </tbody>
 				            </table>

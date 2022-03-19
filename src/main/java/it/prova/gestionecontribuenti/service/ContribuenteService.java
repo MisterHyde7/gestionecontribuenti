@@ -24,5 +24,11 @@ public interface ContribuenteService {
 			String sortBy);
 
 	public List<Contribuente> cercaByCognomeENomeILike(String term);
+	
+	public int dammiSommaImportiCartelle(Long id);
+	
+	public int dammiSommaImportiCartelleConcluse(Long id);
+	
+	public int dammiSommaImportiCartelleInContenzioso(Long id);
 
 }

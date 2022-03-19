@@ -1,4 +1,5 @@
 <%@ taglib prefix = "fmt" uri = "http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!doctype html>
 <html lang="it" class="h-100">
 <head>
@@ -51,13 +52,30 @@
 					  <dd class="col-sm-9"><fmt:formatDate type = "date" value = "${show_contribuente_attr.dataDiNascita}" /></dd>
 			    	</dl>
 			    	
+			    	<dl class="row">
+					  <dt class="col-sm-3 text-right">Totale importo cartelle:</dt>
+					  <dd class="col-sm-9">${somma_cartelle}</dd>
+			    	</dl>
+			    	
+			    	<dl class="row">
+					  <dt class="col-sm-3 text-right">Totale importo cartelle concluse:</dt>
+					  <dd class="col-sm-9">${somma_cartelle_concluse}</dd>
+			    	</dl>
+			    	
+			    	<c:if test="${somma_cartelle_incontenzioso!=0}">
+				    	<dl class="row bg-danger">
+						  <dt class="col-sm-3 text-right">Totale importo cartelle in contenzioso:</dt>
+						  <dd class="col-sm-9">${somma_cartelle_incontenzioso}</dd>
+				    	</dl>
+			    	</c:if>
+			    	
 					</div>
 			    	
 			    <!-- end card body -->
 			    </div>
 			    
 			    <div class='card-footer'>
-			        <a href="${pageContext.request.contextPath }/contribuente/" class='btn btn-outline-secondary' style='width:80px'>
+			        <a href="${pageContext.request.contextPath }/contribuente" class='btn btn-outline-secondary' style='width:80px'>
 			            <i class='fa fa-chevron-left'></i> Back
 			        </a>
 			    </div>

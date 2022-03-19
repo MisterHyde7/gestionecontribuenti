@@ -2,12 +2,14 @@ package it.prova.gestionecontribuenti.dto;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import it.prova.gestionecontribuenti.model.CartellaEsattoriale;
 import it.prova.gestionecontribuenti.model.Contribuente;
 
 public class ContribuenteDTO {
@@ -30,8 +32,7 @@ public class ContribuenteDTO {
 	@NotNull(message = "{dataDiNascita.notnull}")
 	private Date dataDiNascita;
 
-	// la proprieta uno a molti e cioe 'films' non serve al momento nelle view
-	// e quindi non la mettiamo anche perche in genere risulta di difficile gestione
+	private Set<CartellaEsattoriale> cartelle;
 
 	public ContribuenteDTO() {
 	}
@@ -121,13 +122,23 @@ public class ContribuenteDTO {
 		this.dataDiNascita = dataDiNascita;
 	}
 
+	public Set<CartellaEsattoriale> getCartelle() {
+		return cartelle;
+	}
+
+	public void setCartelle(Set<CartellaEsattoriale> cartelle) {
+		this.cartelle = cartelle;
+	}
+
 	public Contribuente buildContribuenteModel() {
-		return new Contribuente(this.id, this.nome, this.cognome, this.indirizzo, this.codiceFiscale, this.dataDiNascita);
+		return new Contribuente(this.id, this.nome, this.cognome, this.indirizzo, this.codiceFiscale,
+				this.dataDiNascita);
 	}
 
 	public static ContribuenteDTO buildContribuenteDTOFromModel(Contribuente contribuenteModel) {
-		return new ContribuenteDTO(contribuenteModel.getId(), contribuenteModel.getNome(), contribuenteModel.getCognome(),
-				contribuenteModel.getIndirizzo(), contribuenteModel.getCodiceFiscale(), contribuenteModel.getDataDiNascita());
+		return new ContribuenteDTO(contribuenteModel.getId(), contribuenteModel.getNome(),
+				contribuenteModel.getCognome(), contribuenteModel.getIndirizzo(), contribuenteModel.getCodiceFiscale(),
+				contribuenteModel.getDataDiNascita());
 	}
 
 	public static List<ContribuenteDTO> createRegistaDTOListFromModelList(List<Contribuente> modelListInput) {

@@ -83,6 +83,9 @@ public class ContribuenteController {
 	@GetMapping("/show/{idContribuente}")
 	public String showContribuente(@PathVariable(required = true) Long idContribuente, Model model) {
 		model.addAttribute("show_contribuente_attr", contribuenteService.caricaSingoloElemento(idContribuente));
+		model.addAttribute("somma_cartelle", (contribuenteService.dammiSommaImportiCartelle(idContribuente)));
+		model.addAttribute("somma_cartelle_concluse", (contribuenteService.dammiSommaImportiCartelleConcluse(idContribuente)));
+		model.addAttribute("somma_cartelle_incontenzioso", (contribuenteService.dammiSommaImportiCartelleInContenzioso(idContribuente)));
 		return "contribuente/show";
 	}
 

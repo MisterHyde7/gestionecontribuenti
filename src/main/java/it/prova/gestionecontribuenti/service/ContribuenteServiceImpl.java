@@ -16,7 +16,9 @@ import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import it.prova.gestionecontribuenti.model.CartellaEsattoriale;
 import it.prova.gestionecontribuenti.model.Contribuente;
+import it.prova.gestionecontribuenti.model.Stato;
 import it.prova.gestionecontribuenti.repository.contribuente.ContribuenteRepository;
 
 @Service
@@ -103,6 +105,40 @@ public class ContribuenteServiceImpl implements ContribuenteService {
 	@Transactional(readOnly = true)
 	public List<Contribuente> cercaByCognomeENomeILike(String term) {
 		return repository.findByCognomeIgnoreCaseContainingOrNomeIgnoreCaseContainingOrderByNomeAsc(term, term);
+	}
+
+	@Override
+	public int dammiSommaImportiCartelle(Long id) {
+		Contribuente contribuente = repository.findSingleContribuenteEager(id);
+		int somma = 0;
+		for (CartellaEsattoriale cartellaItem : contribuente.getCartelle()) {
+			somma += cartellaItem.getImporto();
+		}
+		return somma;
+	}
+
+	@Override
+	public int dammiSommaImportiCartelleConcluse(Long id) {
+		Contribuente contribuente = repository.findSingleContribuenteEager(id);
+		int somma = 0;
+		for (CartellaEsattoriale cartellaItem : contribuente.getCartelle()) {
+			if (cartellaItem.getStato().equals(Stato.CONCLUSA)) {
+				somma += cartellaItem.getImporto();
+			}
+		}
+		return somma;
+	}
+	
+	@Override
+	public int dammiSommaImportiCartelleInContenzioso(Long id) {
+		Contribuente contribuente = repository.findSingleContribuenteEager(id);
+		int somma = 0;
+		for (CartellaEsattoriale cartellaItem : contribuente.getCartelle()) {
+			if (cartellaItem.getStato().equals(Stato.IN_CONTEZIOSO)) {
+				somma += cartellaItem.getImporto();
+			}
+		}
+		return somma;
 	}
 
 }
