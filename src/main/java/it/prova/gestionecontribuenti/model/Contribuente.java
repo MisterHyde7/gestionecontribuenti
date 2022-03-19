@@ -10,8 +10,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -38,9 +37,8 @@ public class Contribuente {
 	@Column(name = "datadinascita")
 	private Date dataDiNascita;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "contribuente_id", nullable = false)
-	private Set<CartellaEsattoriale> cartelleEsattoriali = new HashSet<CartellaEsattoriale>();
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "contribuente")
+	private Set<CartellaEsattoriale> cartelle = new HashSet<CartellaEsattoriale>();
 
 	public Contribuente() {
 		super();
@@ -67,7 +65,7 @@ public class Contribuente {
 	}
 
 	public Contribuente(Long id, String nome, String cognome, String codiceFiscale, String indirizzo,
-			Date dataDiNascita, Set<CartellaEsattoriale> cartelleEsattoriali) {
+			Date dataDiNascita, Set<CartellaEsattoriale> cartelle) {
 		super();
 		this.id = id;
 		this.nome = nome;
@@ -75,7 +73,7 @@ public class Contribuente {
 		this.codiceFiscale = codiceFiscale;
 		this.indirizzo = indirizzo;
 		this.dataDiNascita = dataDiNascita;
-		this.cartelleEsattoriali = cartelleEsattoriali;
+		this.cartelle = cartelle;
 	}
 
 	public Long getId() {
@@ -126,12 +124,12 @@ public class Contribuente {
 		this.dataDiNascita = dataDiNascita;
 	}
 
-	public Set<CartellaEsattoriale> getCartelleEsattoriali() {
-		return cartelleEsattoriali;
+	public Set<CartellaEsattoriale> getCartelle() {
+		return cartelle;
 	}
 
-	public void setCartelleEsattoriali(Set<CartellaEsattoriale> cartelleEsattoriali) {
-		this.cartelleEsattoriali = cartelleEsattoriali;
+	public void setCartelle(Set<CartellaEsattoriale> cartelle) {
+		this.cartelle = cartelle;
 	}
 
 }

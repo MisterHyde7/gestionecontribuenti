@@ -17,8 +17,8 @@
 					<div class="card border-danger" >
 					  <div class="card-header">Oooops......</div>
 					  <div class="card-body text-danger">
-					    <h5 class="card-title">Piccolo Problemino</h5>
-					    <p class="card-text">Abbiamo avuto un piccolo problemino... Ci scusiamo per l'inconveniente.</p>
+					    <h5 class="card-title">Si e verificato un errore</h5>
+					    <p class="card-text">Abbiamo avuto un piccolo problema... Ci scusiamo per l'inconveniente.</p>
 					    
 					    <!-- dettaglio -->
 				    	<p>

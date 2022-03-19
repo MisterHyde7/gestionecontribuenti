@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import it.prova.gestionecontribuenti.dto.CartellaEsattorialeDTO;
+import it.prova.gestionecontribuenti.dto.ContribuenteDTO;
 import it.prova.gestionecontribuenti.model.CartellaEsattoriale;
 import it.prova.gestionecontribuenti.service.CartellaEsattorialeService;
 import it.prova.gestionecontribuenti.service.ContribuenteService;
@@ -33,102 +35,103 @@ public class CartellaEsattorialeController {
 	private ContribuenteService contribuenteService;
 
 	@GetMapping
-	public ModelAndView listAllFilms() {
+	public ModelAndView listAllCartelle() {
 		ModelAndView mv = new ModelAndView();
 		List<CartellaEsattoriale> cartelle = cartellaEsattorialeService.listAllElements();
-		mv.addObject("cartella_list_attribute", CartellaDTO.createCartellaDTOListFromModelList(films, false));
-		mv.setViewName("film/list");
+		mv.addObject("cartella_list_attribute", CartellaEsattorialeDTO.createCartellaDTOListFromModelList(cartelle));
+		mv.setViewName("cartella/list");
 		return mv;
 	}
 
 	@GetMapping("/insert")
-	public String createFilm(Model model) {
-		model.addAttribute("insert_film_attr", new CartellaDTO());
-		return "film/insert";
+	public String createCartella(Model model) {
+		model.addAttribute("insert_cartella_attr", new CartellaEsattorialeDTO());
+		return "cartella/insert";
 	}
 
 	// inietto la request perché ci potrebbe tornare utile per ispezionare i
 	// parametri
 	@PostMapping("/save")
-	public String saveFilm(@Valid @ModelAttribute("insert_film_attr") CartellaDTO CartellaDTO, BindingResult result,
-			RedirectAttributes redirectAttrs, HttpServletRequest request) {
+	public String saveCartella(
+			@Valid @ModelAttribute("insert_cartella_attr") CartellaEsattorialeDTO cartellaEsattorialeDTO,
+			BindingResult result, RedirectAttributes redirectAttrs, HttpServletRequest request) {
 
 		// se fosse un entity questa operazione sarebbe inutile perche provvederebbe
 		// da solo fare il binding dell'intero oggetto. Essendo un dto dobbiamo pensarci
 		// noi 'a mano'. Se validazione risulta ok devo caricare l'oggetto per
 		// visualizzarne nome e cognome nel campo testo
-		if (CartellaDTO.getRegista() == null || CartellaDTO.getRegista().getId() == null)
-			result.rejectValue("regista", "regista.notnull");
+		if (cartellaEsattorialeDTO.getContribuente() == null
+				|| cartellaEsattorialeDTO.getContribuente().getId() == null)
+			result.rejectValue("contribuente", "contribuente.notnull");
 		else
-			CartellaDTO.setRegista(RegistaDTO
-					.buildRegistaDTOFromModel(registaService.caricaSingoloElemento(CartellaDTO.getRegista().getId())));
+			cartellaEsattorialeDTO.setContribuente(ContribuenteDTO.buildContribuenteDTOFromModel(
+					contribuenteService.caricaSingoloElemento(cartellaEsattorialeDTO.getContribuente().getId())));
 
 		if (result.hasErrors()) {
-			return "film/insert";
+			return "cartella/insert";
 		}
-		cartellaEsattorialeService.inserisciNuovo(CartellaDTO.buildFilmModel());
+		cartellaEsattorialeService.inserisciNuovo(cartellaEsattorialeDTO.buildCartellaEsattorialeModel());
 
 		redirectAttrs.addFlashAttribute("successMessage", "Operazione eseguita correttamente");
-		return "redirect:/film";
+		return "redirect:/cartellaEsattoriale";
 	}
 
 	@GetMapping("/search")
-	public String searchFilm(Model model) {
+	public String searchCartella(Model model) {
 		model.addAttribute("registi_list_attribute",
-				RegistaDTO.createRegistaDTOListFromModelList(registaService.listAllElements()));
-		return "film/search";
+				ContribuenteDTO.createRegistaDTOListFromModelList(contribuenteService.listAllElements()));
+		return "cartella/search";
 	}
 
 	@PostMapping("/list")
-	public String listFilms(CartellaDTO filmExample, ModelMap model) {
-		if (filmExample.getMinutiDurata() == null)
-			filmExample.setMinutiDurata(1);
-		List<Film> films = cartellaEsattorialeService.findByExample(filmExample.buildFilmModel());
-		model.addAttribute("cartella_list_attribute", CartellaDTO.createCartellaDTOListFromModelList(films, false));
-		return "film/list";
+	public String listCartelle(CartellaEsattorialeDTO cartellaExample, ModelMap model) {
+
+		model.addAttribute("cartella_list_attribute", cartellaEsattorialeService.listAllElements());
+		return "cartella/list";
 	}
 
-	@GetMapping("/show/{idFilm}")
-	public String showFilm(@PathVariable(required = true) Long idFilm, Model model) {
-		model.addAttribute("show_film_attr", cartellaEsattorialeService.caricaSingoloElementoEager(idFilm));
-		return "film/show";
+	@GetMapping("/show/{idcartella}")
+	public String showCartella(@PathVariable(required = true) Long idcartella, Model model) {
+		model.addAttribute("show_cartella_attr", cartellaEsattorialeService.caricaSingoloElementoEager(idcartella));
+		return "cartella/show";
 	}
 
-	@GetMapping("/edit/{idFilm}")
-	public String editFilma(@PathVariable(required = true) Long idFilm, Model model) {
-		model.addAttribute("edit_film_attr", CartellaDTO.buildCartellaDTOFromModel(cartellaEsattorialeService.caricaSingoloElemento(idFilm),
-				(cartellaEsattorialeService.caricaSingoloElementoEager(idFilm).getRegista().getId() != null)));
-		return "film/edit";
+	@GetMapping("/edit/{idcartella}")
+	public String editCartella(@PathVariable(required = true) Long idcartella, Model model) {
+		model.addAttribute("edit_cartella_attr", CartellaEsattorialeDTO
+				.buildCartellaEsattorialeDTOFromModel(cartellaEsattorialeService.caricaSingoloElemento(idcartella)));
+		return "cartella/edit";
 	}
 
 	@PostMapping("/update")
-	public String updateFilm(@Valid @ModelAttribute("edit_film_attr") CartellaDTO CartellaDTO, BindingResult result,
-			RedirectAttributes redirectAttrs, HttpServletRequest request) {
+	public String updateCartella(
+			@Valid @ModelAttribute("edit_cartella_attr") CartellaEsattorialeDTO CartellaEsattorialeDTO,
+			BindingResult result, RedirectAttributes redirectAttrs, HttpServletRequest request) {
 
 		if (result.hasErrors()) {
-			return "film/edit";
+			return "cartella/edit";
 		}
-		cartellaEsattorialeService.aggiorna(CartellaDTO.buildFilmModel());
+		cartellaEsattorialeService.aggiorna(CartellaEsattorialeDTO.buildCartellaEsattorialeModel());
 
 		redirectAttrs.addFlashAttribute("successMessage", "Operazione eseguita correttamente");
-		return "redirect:/film";
+		return "redirect:/cartellaEsattoriale";
 	}
 
-	@GetMapping("/delete/{idFilm}")
-	public String prepareDelete(@PathVariable(required = true) Long idFilm, Model model,
+	@GetMapping("/delete/{idCartella}")
+	public String deleteCartella(@PathVariable(required = true) Long idCartella, Model model,
 			RedirectAttributes redirectAttrs) {
 
-		model.addAttribute("delete_film_attr", cartellaEsattorialeService.caricaSingoloElemento(idFilm));
-		return "film/delete";
+		model.addAttribute("delete_cartella_attr", cartellaEsattorialeService.caricaSingoloElemento(idCartella));
+		return "cartella/delete";
 	}
 
-	@GetMapping("/remove/{idFilm}")
-	public String confirm(@PathVariable(required = true) Long idFilm, RedirectAttributes redirectAttrs) {
+	@GetMapping("/remove/{idCartella}")
+	public String removeCartella(@PathVariable(required = true) Long idCartella, RedirectAttributes redirectAttrs) {
 
-		cartellaEsattorialeService.rimuovi(cartellaEsattorialeService.caricaSingoloElemento(idFilm));
+		cartellaEsattorialeService.rimuovi(cartellaEsattorialeService.caricaSingoloElemento(idCartella));
 
 		redirectAttrs.addFlashAttribute("successMessage", "Operazione eseguita correttamente");
-		return "redirect:/film";
+		return "redirect:/cartellaEsattoriale";
 	}
 
 }

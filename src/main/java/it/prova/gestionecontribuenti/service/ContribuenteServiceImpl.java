@@ -12,6 +12,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,6 +27,7 @@ public class ContribuenteServiceImpl implements ContribuenteService {
 
 	@Override
 	@Transactional(readOnly = true)
+	@EntityGraph(value = "contribuente")
 	public List<Contribuente> listAllElements() {
 		return (List<Contribuente>) repository.findAll();
 	}
@@ -96,6 +98,11 @@ public class ContribuenteServiceImpl implements ContribuenteService {
 			paging = PageRequest.of(pageNo, pageSize, Sort.by(sortBy));
 
 		return repository.findAll(specificationCriteria, paging);
+	}
+
+	@Transactional(readOnly = true)
+	public List<Contribuente> cercaByCognomeENomeILike(String term) {
+		return repository.findByCognomeIgnoreCaseContainingOrNomeIgnoreCaseContainingOrderByNomeAsc(term, term);
 	}
 
 }

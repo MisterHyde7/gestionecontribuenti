@@ -9,6 +9,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import it.prova.gestionecontribuenti.model.CartellaEsattoriale;
+import it.prova.gestionecontribuenti.model.Stato;
 
 public class CartellaEsattorialeDTO {
 
@@ -21,6 +22,9 @@ public class CartellaEsattorialeDTO {
 	@NotNull(message = "{importo.notnull}")
 	@Min(1)
 	private Integer importo;
+
+	@NotNull(message = "{stato.notnull}")
+	private Stato stato;
 
 	@NotNull(message = "{contribuente.notnull}")
 	private ContribuenteDTO contribuente;
@@ -91,8 +95,16 @@ public class CartellaEsattorialeDTO {
 		this.contribuente = contribuente;
 	}
 
+	public Stato getStato() {
+		return stato;
+	}
+
+	public void setStato(Stato stato) {
+		this.stato = stato;
+	}
+
 	public CartellaEsattoriale buildCartellaEsattorialeModel() {
-		return new CartellaEsattoriale(this.id, this.descrizione, this.importo,
+		return new CartellaEsattoriale(this.id, this.descrizione, this.importo, this.stato,
 				this.contribuente.buildContribuenteModel());
 	}
 
